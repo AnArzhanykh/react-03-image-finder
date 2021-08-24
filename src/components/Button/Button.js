@@ -1,3 +1,5 @@
+import styles from './Button.module.scss'
+
 // window.scrollTo({
 //   top: document.documentElement.scrollHeight,
 //   behavior: 'smooth',
@@ -5,7 +7,7 @@
 
 const Button =()=>{
     return(
-        <button type='"submit'>Load more</button>
+        <button type='"submit' className = {styles.Button}>Load more</button>
     )
 }
 

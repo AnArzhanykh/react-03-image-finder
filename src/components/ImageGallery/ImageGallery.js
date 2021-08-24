@@ -1,8 +1,9 @@
 import ImageGalleryItem from '../ImageGalleryItem'
+import styles from './ImageGallery.module.scss'
 
 const ImageGallery = ()=>{
     return(
-            <ul className="ImageGallery">
+            <ul className={styles.ImageGallery}>
                 <ImageGalleryItem />
             </ul>
     )
