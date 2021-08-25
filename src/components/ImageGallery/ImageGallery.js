@@ -1,10 +1,13 @@
 import ImageGalleryItem from '../ImageGalleryItem'
 import styles from './ImageGallery.module.scss'
 
-const ImageGallery = ()=>{
+const ImageGallery = ({hits})=>{
+    const {id, webformatURL, largeImageURL ,  } = hits;
+        console.log(hits.id);
+
     return(
             <ul className={styles.ImageGallery}>
-                <ImageGalleryItem />
+                <ImageGalleryItem hits={hits}/>
             </ul>
     )
 }

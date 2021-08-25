@@ -5,9 +5,12 @@ import styles from './Button.module.scss'
 //   behavior: 'smooth',
 // });
 
-const Button =()=>{
+const Button =(props)=>{
+    const loadMoreImages=()=>{
+        props.onClick()
+    }
     return(
-        <button type='"submit' className = {styles.Button}>Load more</button>
+        <button type='"submit' className = {styles.Button} onClick={loadMoreImages}>Load more</button>
     )
 }
 

@@ -5,60 +5,56 @@ import Searchbar from './components/Searchbar'
 import Button from './components/Button'
 import Modal from './components/Modal'
 import Loader from './components/Loader'
-import axios from "axios";
-
-
-
-
-
-// function App() {
-
-//   const onChangeQuery = query =>{
-//     console.log(query);
-//     const numberPAge = 1;
-//         const key = '21709969-2aaf655592c1caf292dc08cd8';
-//         const url=`https://pixabay.com/api/?q=${query}&page=${numberPAge}&key=${key}&image_type=photo&orientation=horizontal&per_page=12` 
-//         // const pool = axios.get(url).then(response=>response.data).then(data=> this.setState({hits: data.hits})) 
-//         const pool = axios.get(url).then(response=>this.setState({hits: response.data.hits}))
-//   }
-//   return <>
-//     <Searchbar onSubmit={onChangeQuery}/>
-//     <ImageGallery />
-//     <Button />
-//     {/* <Modal /> */}
-//     <Loader />
-//   </>;
-  
-// }
-
-// export default App;
-
+import newApi from './servises/new-api.js'
 
 
 class App extends Component {
 
   state ={
       hits: [],
+      currentPage: 1,
+      searchQuery: '',
+      isLoading: false,
+      error: null,
   }
 
-  onChangeQuery (query) {
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.searchQuery !== this.state.searchQuery){
+      this.fetchImages()
+    }
+  }
 
-    console.log(query);
-    const numberPAge = 1;
-        const key = '21709969-2aaf655592c1caf292dc08cd8';
-        const url=`https://pixabay.com/api/?q=${query}&page=${numberPAge}&key=${key}&image_type=photo&orientation=horizontal&per_page=12` 
-        // const pool = axios.get(url).then(response=>response.data).then(data=> this.setState({hits: data.hits})) 
-        const pool = axios.get(url).then(response=>this.setState({hits: response.data.hits}))
+  onChangeQuery = (query)=> {
+    this.setState({searchQuery: query, currentPage: 1, hits: [], error: null} )
+
+  }
+
+  fetchImages =()=>{
+    const {searchQuery, currentPage} = this.state
+    const options ={searchQuery, currentPage,}
+    this.setState({isLoading: true})
+    
+
+   newApi.fetchImage(options).then(hits => {
+      this.setState(prevState =>({
+        hits: [...prevState.hits, ...hits],
+        currentPage: prevState.currentPage + 1,
+      }))
+    }).catch(error=>this.setState({error})).finally(()=>this.setState({isLoading: false}))
   }
 
   render(){
+    const {hits, isLoading, error} =this.state
+    const shouldRenderloadMoreItem = (hits.length > 0) && !isLoading
       return(
         <>
-          <Searchbar onSubmit={this.onChangeQuery.bind(this)}/>
-          <ImageGallery />
-          <Button />
+          {error && <h1>Error, try more</h1>}
+          <Searchbar onSubmit={this.onChangeQuery}/>
+          {isLoading &&  <Loader />}
+          {shouldRenderloadMoreItem && (<ImageGallery hits={hits}/>)}
+          {shouldRenderloadMoreItem && (<Button onClick={this.fetchImages}/>)}
           {/* <Modal /> */}
-          <Loader />
+         
         </>
       )
   }
