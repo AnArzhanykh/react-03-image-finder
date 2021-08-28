@@ -86,6 +86,7 @@ class App extends Component {
   render(){
     const {hits, isLoading, error, showModal, largeImageURL} =this.state;
     const shouldRenderloadMoreItem = (hits.length > 0) && !isLoading;
+    const shouldRenderloadMoreButton = !isLoading && (hits.length > 11);
 
 
       return(
@@ -94,7 +95,7 @@ class App extends Component {
           <Searchbar onSubmit={this.onChangeQuery}/>
           {isLoading &&  <Loader />}
           {shouldRenderloadMoreItem && (<ImageGallery hits={hits} onClick={this.OpenModal} />)}
-          {shouldRenderloadMoreItem && (hits.length > 11) && (<Button onClick={this.fetchImages}/>)}
+          {shouldRenderloadMoreButton && (<Button onClick={this.fetchImages}/>)}
           {showModal && <Modal img={largeImageURL} closeModal={this.togleModal}/>}
         </>
       )
