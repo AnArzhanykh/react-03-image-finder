@@ -33,7 +33,7 @@ class App extends Component {
     if(prevState.searchQuery !== this.state.searchQuery){
       this.fetchImages()
     }
-    this.autoScrollDown()
+    // this.autoScrollDown()
   }
 
   // handlekeyDown = e=>{
@@ -79,6 +79,7 @@ class App extends Component {
         currentPage: prevState.currentPage + 1,
       }))
     }).catch(error=>this.setState({error})).finally(()=>this.setState({isLoading: false}))
+    this.autoScrollDown()
 }
 
 
