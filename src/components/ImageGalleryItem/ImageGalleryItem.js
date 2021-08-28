@@ -1,11 +1,9 @@
 import styles from './ImageGalleryItem.module.scss'
 
-const ImageGalleryItem = ({hits})=> {
-        
-    console.log(hits);
+const ImageGalleryItem = ({webformatURL, tags, largeImageURL, onClick})=> {
     return(
         <li className={styles.ImageGalleryItem}>
-            <img src="" alt="" className={styles.ImageGalleryItem__image} />
+            <img src={webformatURL}  alt={tags} className={styles.ImageGalleryItem__image} onClick={()=>onClick(largeImageURL)}/>
         </li>
     )
 }

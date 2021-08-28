@@ -1,16 +1,11 @@
 import styles from './Button.module.scss'
 
-// window.scrollTo({
-//   top: document.documentElement.scrollHeight,
-//   behavior: 'smooth',
-// });
+
 
 const Button =(props)=>{
-    const loadMoreImages=()=>{
-        props.onClick()
-    }
+    const {onClick} = props;
     return(
-        <button type='"submit' className = {styles.Button} onClick={loadMoreImages}>Load more</button>
+        <button type='submit' id ="loader"className = {styles.Button} onClick={onClick}>Load more</button>
     )
 }
 
