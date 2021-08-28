@@ -8,7 +8,7 @@ const fetchImage = ({searchQuery = '', currentPage = 1, pageSize = 12})=>{
     return(
 
         
-        axios.get(url).then(response=> response.data.hits)
+        axios.get(url).then(response=> response.data)
     )
 }
 

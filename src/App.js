@@ -13,8 +13,10 @@ class App extends Component {
   state ={
       hits: [],
       currentPage: 1,
+      pageSize: 100,
       searchQuery: '',
       isLoading: false,
+      renderButton: false,
       error: null,
       showModal: false,
       largeImageURL: '',
@@ -64,31 +66,47 @@ class App extends Component {
   }
 
   onChangeQuery = (query)=> {
-    this.setState({searchQuery: query, currentPage: 1, hits: [], error: null} )
+    this.setState({searchQuery: query, currentPage: 1, hits: [], error: null, renderButton: false} )
 
   }
 
   fetchImages =()=>{
-    const {searchQuery, currentPage} = this.state
-    const options ={searchQuery, currentPage,}
+    const {searchQuery, currentPage, pageSize} = this.state
+    const options ={searchQuery, currentPage, pageSize}
     this.setState({isLoading: true})
 
-    newApi.fetchImage(options).then(hits => {
+    newApi.fetchImage(options).then(({totalHits, hits}) => {
+
+      const needLoadMore = (totalHits-pageSize*currentPage) > 0
+      
+      if(needLoadMore) {
+        this.setState(({renderButton})=>({renderButton: !renderButton}))
+      }
+      if(!needLoadMore) {
+        this.setState(({renderButton})=>({renderButton: !renderButton}))
+      }
+
       this.setState(prevState =>({
         hits: [...prevState.hits, ...hits],
         currentPage: prevState.currentPage + 1,
-      }))
-    }).then(this.autoScrollDown()).catch(error=>this.setState({error}))
+      }));
+      this.autoScrollDown();
+    }).catch(error=>this.setState({error}))
     .finally(()=>this.setState({isLoading: false}))
 }
 
 
 
   render(){
-    const {hits, isLoading, error, showModal, largeImageURL} =this.state;
+    const {hits, isLoading, error, showModal, largeImageURL, renderButton} =this.state;
     const shouldRenderloadMoreItem = (hits.length > 0) && !isLoading;
-    const shouldRenderloadMoreButton = !isLoading && (hits.length > 11);
-
+    const shouldRenderloadMoreButton = renderButton && (hits.length > 11);
+    // if(renderButton){
+    //    shouldRenderloadMoreButton = !isLoading || (hits.length > 11);
+    // }
+    
+    // console.log(shouldRenderloadMoreItem);
+    // console.log(shouldRenderloadMoreButton);
 
       return(
         <>
@@ -96,8 +114,9 @@ class App extends Component {
           <Searchbar onSubmit={this.onChangeQuery}/>
           {isLoading &&  <Loader />}
           {(hits.length > 0) && (<ImageGallery hits={hits} onClick={this.OpenModal} />)}
-          {shouldRenderloadMoreButton && (<Button onClick={this.fetchImages}/>)}
-          {showModal && <Modal img={largeImageURL} closeModal={this.togleModal}/>}
+          {/* {shouldRenderloadMoreButton && (<Button onClick={this.fetchImages}/>)} */}
+          {/* {showModal && <Modal img={largeImageURL} closeModal={this.togleModal}/>} */}
+          {(showModal && <Modal img={largeImageURL} closeModal={this.togleModal}/>) || (shouldRenderloadMoreButton && (<Button onClick={this.fetchImages}/>))}
         </>
       )
   }
