@@ -78,8 +78,9 @@ class App extends Component {
         hits: [...prevState.hits, ...hits],
         currentPage: prevState.currentPage + 1,
       }))
+      this.autoScrollDown()
     }).catch(error=>this.setState({error})).finally(()=>this.setState({isLoading: false}))
-    this.autoScrollDown()
+
 }
 
 
