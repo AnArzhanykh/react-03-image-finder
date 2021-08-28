@@ -78,9 +78,8 @@ class App extends Component {
         hits: [...prevState.hits, ...hits],
         currentPage: prevState.currentPage + 1,
       }))
-      this.autoScrollDown()
-    }).catch(error=>this.setState({error})).finally(()=>this.setState({isLoading: false}))
-
+    }).then(this.autoScrollDown()).catch(error=>this.setState({error}))
+    .finally(()=>this.setState({isLoading: false}))
 }
 
 
@@ -96,7 +95,7 @@ class App extends Component {
           {error && <h1>Error, try more</h1>}
           <Searchbar onSubmit={this.onChangeQuery}/>
           {isLoading &&  <Loader />}
-          {shouldRenderloadMoreItem && (<ImageGallery hits={hits} onClick={this.OpenModal} />)}
+          {(hits.length > 0) && (<ImageGallery hits={hits} onClick={this.OpenModal} />)}
           {shouldRenderloadMoreButton && (<Button onClick={this.fetchImages}/>)}
           {showModal && <Modal img={largeImageURL} closeModal={this.togleModal}/>}
         </>
